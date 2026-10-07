@@ -1,0 +1,10 @@
+create extension if not exists pg_net with schema extensions;
+create table public.academy_push_config(id int primary key check(id=1),public_key text not null,private_key text not null,notifier_secret text not null);
+create table public.academy_push_subscriptions(student uuid references academy_profiles,endpoint text primary key,subscription jsonb not null,created_at timestamptz default now());
+create table public.academy_push_deliveries(event uuid references academy_events,endpoint text,kind text,created_at timestamptz default now(),primary key(event,endpoint,kind));
+alter table public.academy_push_config enable row level security;alter table public.academy_push_subscriptions enable row level security;alter table public.academy_push_deliveries enable row level security;
+revoke all on public.academy_push_config,public.academy_push_subscriptions,public.academy_push_deliveries from anon,authenticated;
+alter table public.academy_drawing_rooms add column hidden boolean not null default false;
+create function academy_internal.send_event_notifications() returns void language plpgsql security invoker set search_path=public as $$ declare secret text;begin select notifier_secret into secret from academy_push_config where id=1;if secret is null then return;end if;perform net.http_post(url:='https://reccddfusealreknvjfj.supabase.co/functions/v1/academy-notify',headers:=jsonb_build_object('Content-Type','application/json','Authorization','Bearer '||secret),body:='{}'::jsonb);end $$;
+revoke execute on function academy_internal.send_event_notifications() from public,anon,authenticated;
+select cron.schedule('hahn-event-notifications','*/15 * * * *','select academy_internal.send_event_notifications();');

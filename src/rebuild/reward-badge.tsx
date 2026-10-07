@@ -1,0 +1,5 @@
+import React,{createContext,useContext} from 'react';
+export type RewardStatus={day:string;learningRemaining:number;missionRemaining:number;missions:string[];chronicle:boolean};
+export const RewardContext=createContext<RewardStatus|null>(null);
+export function rewardAvailable(status:RewardStatus|null,route:string){if(!status)return false;const learning=status.learningRemaining>0;const missions=status.missions.length>0;if(['home','rewards','profile','adventures'].includes(route))return learning||missions;if(['academy','nexlings','learning'].includes(route))return learning;if(['mystery','chronicle'].includes(route))return learning&&status.chronicle;if(route==='missions')return missions;return false;}
+export function RewardBadge({route,available}:{route?:string;available?:boolean}){const status=useContext(RewardContext);if(!(available??rewardAvailable(status,route||'')))return null;return <span className="reward-badge" role="img" aria-label="Points available to collect" title="Points available to collect"><img src="/assets/nexus-logo.png" alt=""/></span>;}

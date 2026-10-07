@@ -1,0 +1,30 @@
+{
+  "name": "HAHN Heroes \u2014 Nexus Testing",
+  "short_name": "H.A.H.N. Heroes",
+  "description": "Heroes Awakening Hidden Nexus",
+  "start_url": "/_nexus-test/",
+  "scope": "/_nexus-test/",
+  "display": "standalone",
+  "display_override": [
+    "fullscreen",
+    "standalone"
+  ],
+  "orientation": "portrait",
+  "background_color": "#020917",
+  "theme_color": "#020917",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "id": "/_nexus-test/"
+}

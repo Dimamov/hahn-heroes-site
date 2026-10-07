@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import {start,move,view} from '../server/games.mjs';
+const lobby=game=>({game,phase:'lobby',host:'a',players:[{id:'a',score:0},{id:'b',score:0},{id:'c',score:0}]});
+let s=start(lobby('odin'));assert.equal(view(s,'a').hand.length,7);assert.equal(view(s,'a').hands,undefined);assert.equal(view(s,'a').deck,undefined);assert.throws(()=>move(s,'b',{type:'draw'}),/turn/);move(s,'a',{type:'draw'});assert.throws(()=>move(s,'a',{type:'draw'}),/already/);
+s=start(lobby('memory'));assert(view(s,'a').board.every(x=>x===null));move(s,'a',{index:0});assert.equal(view(s,'b').board.filter(x=>x!==null).length,1);assert.throws(()=>move(s,'a',{index:0}));
+s=start(lobby('trivia'));assert.equal(view(s,'a').question.length,2);assert.equal(view(s,'a').order,undefined);move(s,'a',{round:0,answer:s.question[2]});assert.equal(s.players[0].score,1);assert.throws(()=>move(s,'a',{round:0,answer:0}),/already/);assert.throws(()=>move(s,'b',{round:9,answer:0}),/new question/);
+s=start(lobby('pattern'));assert.equal(view(s,'a').answer,undefined);move(s,'a',{round:0,answer:s.answer});assert.equal(s.players[0].score,1);
+s=start(lobby('scramble'));assert.equal(view(s,'a').answer,undefined);move(s,'a',{round:0,answer:s.answer});assert.equal(s.players[0].score,1);
+s=start(lobby('shadow'));assert.equal(view(s,'a').spy,undefined);assert.equal(view(s,s.spy).secret.includes('Find'),true);assert.throws(()=>move(s,'a',{vote:'a'}));
+s=start(lobby('tapple'));assert.throws(()=>move(s,'a',{word:'nonsense'}));move(s,'a',{word:s.category==='Animals'?'ant':'apple'});assert.equal(s.turn,1);assert.throws(()=>move(s,'b',{word:s.category==='Animals'?'ant':'apple'}),/letter/);
+s=start(lobby('spot'));assert.throws(()=>move(s,'a',{index:0}));assert.throws(()=>move(s,'a',{x:0,y:0}));
+console.log('8 game engines: hidden state, turn validation, scoring, invalid moves passed');
