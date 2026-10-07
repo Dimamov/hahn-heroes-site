@@ -1,0 +1,12 @@
+<!doctype html><html lang="en"><head><title>Episodes | HAHN Heroes</title><meta name="description" content="Read the HAHN Heroes web comic, episode by episode."><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#070920"><link rel="icon" href="assets/nexus-logo.png"><link rel="stylesheet" href="site.css"><script src="analytics.js" defer></script></head><body>
+<header><div class="wrap bar"><a class="brand" href="/"><img src="assets/nexus-logo.png" alt=""><span>HAHN <b>Heroes</b></span></a><nav aria-label="Main"><a href="/" >Home</a><a href="/episodes.html" aria-current="page">Episodes</a><a href="/about">About</a></nav></div></header>
+<main><section><div class="wrap"><span class="tag">Web comic</span><h1>Epi<em>sodes</em></h1><p style="color:var(--mute);max-width:560px">New adventures from the Hidden Nexus. Each episode is a short comic you can read in a few minutes.</p>
+<div id="eps"><noscript><p>Please turn on JavaScript to see the episodes.</p></noscript></div></div></section></main>
+<script>
+fetch('episodes.json').then(r=>r.json()).then(d=>{const box=document.getElementById('eps');
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+d.episodes.forEach(e=>{const soon=e.status==='Soon';const a=document.createElement('article');a.className='ep'+(soon?' soon':'');
+const pages=(e.pages||[]).map((p,i)=>'<a href="'+esc(p)+'"><img src="'+esc(p)+'" alt="Episode '+e.number+' page '+(i+1)+'" loading="lazy"></a>').join('');
+a.innerHTML=(e.cover?'<img src="'+esc(e.cover)+'" alt="Cover of '+esc(e.title)+'">':'<div class="ph">EP '+String(e.number).padStart(2,'0')+'</div>')+'<div class="body"><span class="tag">Episode '+String(e.number).padStart(2,'0')+' · '+esc(e.status)+'</span><h2 style="margin-top:14px">'+esc(e.title)+'</h2><p>'+esc(e.summary)+'</p>'+(pages?'<div class="pages">'+pages+'</div>':soon?'':'<p style="color:var(--gold)">Pages are being drawn. Check back soon!</p>')+'</div>';box.append(a)})});
+</script>
+<footer><div class="wrap"><p>Free for Hahn heroes. No ads. No tracking of kids.</p><p><a href="mailto:info@detcorddigital.com" data-contact-creator>Contact the Sensei / Report a bug</a></p><p>Powered by <a href="https://www.detcorddigital.com/"><img src="assets/detcord-logo.webp" alt="Detcord Digital" style="display:inline;height:28px;vertical-align:middle"></a></p></div></footer><script src="/creator-contact.js"></script></body></html>
